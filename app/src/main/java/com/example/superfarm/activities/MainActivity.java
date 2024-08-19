@@ -2,12 +2,10 @@ package com.example.superfarm.activities;
 
 import android.content.Intent;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import androidx.cardview.widget.CardView;
 import com.example.superfarm.R;
 import com.example.superfarm.helpers.SensorParser;
 import com.example.superfarm.models.ENUM_Days;
@@ -29,11 +27,37 @@ public class MainActivity extends AppCompatActivity {
     private ExecutorService executorService = Executors.newSingleThreadExecutor();
     private ArrayAdapter<String> adapter;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ListView sensorListView = findViewById(R.id._dynamic);
+        //ListView sensorListView = findViewById(R.id._dynamic);
+        //static
+        CardView humidityCard = findViewById(R.id.cardViewHumidity);
+        humidityCard.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, SensorActivity.class);
+            intent.putExtra("sensor", sensorList.stream().filter(sensor -> sensor.getSensorType().equals("HUMIDITY")).collect(Collectors.toList()).get(0));
+            startActivity(intent);
+        });
+        CardView temperatureCard = findViewById(R.id.cardViewTemperature);
+        temperatureCard.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, SensorActivity.class);
+            intent.putExtra("sensor", sensorList.stream().filter(sensor -> sensor.getSensorType().equals("TEMPERATURE")).collect(Collectors.toList()).get(0));
+            startActivity(intent);
+        });
+        CardView lightCard = findViewById(R.id.cardViewLight);
+        lightCard.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, SensorActivity.class);
+            intent.putExtra("sensor", sensorList.stream().filter(sensor -> sensor.getSensorType().equals("LIGHT")).collect(Collectors.toList()).get(0));
+            startActivity(intent);
+        });
+        CardView moistureCard = findViewById(R.id.cardViewMoisture);
+        moistureCard.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, SensorActivity.class);
+            intent.putExtra("sensor", sensorList.stream().filter(sensor -> sensor.getSensorType().equals("MOISTURE")).collect(Collectors.toList()).get(0));
+            startActivity(intent);
+        });
 
         executorService.submit(() -> {
             try {
@@ -47,8 +71,8 @@ public class MainActivity extends AppCompatActivity {
                             R.layout.support_simple_spinner_dropdown_item,
                             sensorList.stream().map(Sensor::getSensorType).collect(Collectors.toList()));
 
-                    sensorListView.setAdapter(adapter);
-                    sensorListView.setOnItemClickListener(this::onItemClick);
+                    //sensorListView.setAdapter(adapter);
+                    //sensorListView.setOnItemClickListener(this::onItemClick);
 
                     //Populate the sensor data for each day of the week
                     populateSensorData();
@@ -96,13 +120,20 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /*
+    private void createLayout() {
+        GridLayout gridLayout = new GridLayout(this);
+    }
+     */
 
+    //for the list view
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Sensor sensor = sensorList.get(position);
         Intent intent = new Intent(this, SensorActivity.class);
         intent.putExtra("sensor",sensor);
         startActivity(intent);
     }
+
 
     public void openSetUpScreen(View view){
         Intent intent = new Intent(this, SetUpActivity.class);

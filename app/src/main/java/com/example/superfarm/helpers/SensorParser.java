@@ -30,7 +30,6 @@ public class SensorParser {
                     .stream()
                     .map(s -> new Sensor(s))
                     .collect(Collectors.toList());
-            System.out.println(sensors);
         } catch (Exception e) {
             e.printStackTrace();
         }

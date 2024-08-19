@@ -6,6 +6,7 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import com.example.superfarm.R;
 import com.example.superfarm.models.Sensor;
 import com.fasterxml.jackson.core.io.NumberInput;
@@ -22,8 +23,10 @@ public class SetUpActivity extends AppCompatActivity {
 
         List<Sensor> sensorList = getIntent().getExtras().getSerializable("sensorList", Sensor.SensorList.class).getSensorList();
 
+        ConstraintLayout constraintLayout = findViewById(R.id.set_up_layout);
         LinearLayout linearLayout = new LinearLayout(this);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
+        constraintLayout.addView(linearLayout);
 
         for(Sensor sensor : sensorList)
         {
