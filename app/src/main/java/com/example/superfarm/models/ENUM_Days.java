@@ -2,13 +2,13 @@ package com.example.superfarm.models;
 
 
 public enum ENUM_Days {
+    SUNDAY("Sunday"),
     MONDAY("Monday"),
     TUESDAY("Tuesday"),
     WEDNESDAY("Wednesday"),
     THURSDAY("Thursday"),
     FRIDAY("Friday"),
-    SATURDAY("Saturday"),
-    SUNDAY("Sunday");
+    SATURDAY("Saturday");
 
     private final String strVersion;
 

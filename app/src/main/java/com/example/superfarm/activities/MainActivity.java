@@ -1,6 +1,7 @@
 package com.example.superfarm.activities;
 
 import android.content.Intent;
+import android.os.StrictMode;
 import android.view.View;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,6 +32,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
         setContentView(R.layout.activity_main);
         //ListView sensorListView = findViewById(R.id._dynamic);
         //static
@@ -92,9 +97,10 @@ public class MainActivity extends AppCompatActivity {
      */
     private void populateSensorData() {
         executorService.submit(() -> {
+            try {
+            client = new UDPClient();
             for (ENUM_Days day : ENUM_Days.values()) {
-                try {
-                    client = new UDPClient();
+
                     String dayString = day.toString();
                     String responseData = client.sendGetCommand("farm2000_" + dayString);
 
@@ -110,11 +116,10 @@ public class MainActivity extends AppCompatActivity {
                         sensor.mapDataWithSensors(day, sensorDataMap);
                     }
                 }
-                catch (Exception ignored) {
-                } finally {
-                    if (client != null) {
-                        client.close();
-                    }
+            } catch (Exception ignored) {
+            } finally {
+                if (client != null) {
+                    client.close();
                 }
             }
         });

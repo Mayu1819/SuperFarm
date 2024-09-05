@@ -3,6 +3,7 @@ package com.example.superfarm.helpers;
 import com.example.superfarm.models.Sensor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -39,7 +40,6 @@ public class SensorParser {
 
     //         Type,      Hour,     Value for one day
     public Map<Sensor, Map<String, Float>> parseSensorData(String sensorData, List<Sensor> sensors) {
-        //ObjectMapper mapper = new ObjectMapper();
         JSONObject jsonObject = null;
         Map<Sensor, Map<String, Float>> sensorDataMap = new HashMap<>();
 
