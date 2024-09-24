@@ -7,17 +7,34 @@
         android:layout_height="match_parent"
         tools:context="com.example.superfarm.activities.MainActivity"
         >
+    <RelativeLayout android:id="@+id/relativeLayout"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="16dp" android:layout_marginTop="16dp">
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                app:srcCompat="@drawable/icons8_camera_50" android:id="@+id/imageViewCam"
+                android:layout_marginTop="0dp"/>
+    </RelativeLayout>
+
     <GridLayout android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:rowCount="2"
                 android:columnCount="2"
                 android:alignmentMode="alignMargins"
                 android:columnOrderPreserved="true"
-                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintWidth_percent="0.8" android:id="@+id/gridLayout">
+                app:layout_constraintHorizontal_bias="0.497"
+                app:layout_constraintWidth_percent="0.8" android:id="@+id/gridLayout"
+                app:layout_constraintTop_toBottomOf="@+id/relativeLayout" android:layout_marginTop="32dp">
         <androidx.cardview.widget.CardView
                 android:layout_width="250px"
                 android:layout_height="200px"
@@ -29,7 +46,7 @@
                 app:cardCornerRadius="8dp"
                 app:cardElevation="0dp"
                 android:padding="16dp"
-                 >
+        >
             <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

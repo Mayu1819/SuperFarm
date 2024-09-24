@@ -1,8 +1,11 @@
 package com.example.superfarm.activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.StrictMode;
-import android.view.View;
+import android.util.Base64;
+import android.view.*;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,6 +15,10 @@ import com.example.superfarm.helpers.SensorParser;
 import com.example.superfarm.models.ENUM_Days;
 import com.example.superfarm.models.Sensor;
 import com.example.superfarm.models.UDPClient;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -27,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private UDPClient client;
     private ExecutorService executorService = Executors.newSingleThreadExecutor();
     private ArrayAdapter<String> adapter;
+    private Gson gson = new GsonBuilder().create();
 
 
     @Override
@@ -37,7 +45,29 @@ public class MainActivity extends AppCompatActivity {
         StrictMode.setThreadPolicy(policy);
 
         setContentView(R.layout.activity_main);
-        //ListView sensorListView = findViewById(R.id._dynamic);
+
+        ImageView camIcon = findViewById(R.id.imageViewCam);
+        camIcon.setOnClickListener(v -> {
+            //display the image in a popup
+            LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+            View popupView = inflater.inflate(R.layout.popup_window, (ViewGroup) v.getParent(), false);
+
+            int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+            int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+            final PopupWindow popupWindow = new PopupWindow(popupView, width, height, true);
+
+            popupWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
+
+            //get the image and inflate it in the image view in the popup ?
+            this.populatePopUpImageView(popupWindow);
+
+            // dismiss the popup window when touched
+            popupView.setOnTouchListener((v1, event) -> {
+                popupWindow.dismiss();
+                return false;
+            });
+        });
+
         //static
         CardView humidityCard = findViewById(R.id.cardViewHumidity);
         humidityCard.setOnClickListener(v -> {
@@ -88,6 +118,27 @@ public class MainActivity extends AppCompatActivity {
                 if (client != null) {
                     client.close();
                 }
+            }
+        });
+    }
+
+    private void populatePopUpImageView(PopupWindow popup) {
+        //get data from the server
+        executorService.submit(() -> {
+            try {
+                client = new UDPClient();
+                String response = client.sendGetCommand("farm2000_camera");
+                System.out.println("réponse pure : " + response);
+
+                runOnUiThread(() -> {
+                    byte[] decodedString = Base64.decode(response, Base64.DEFAULT);
+                    Bitmap decodedBitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                    ImageView imageView = popup.getContentView().findViewById(R.id.popUpImageView);
+                    imageView.setImageBitmap(decodedBitmap);
+                });
+            }
+            catch (Exception e) {
+                e.printStackTrace();
             }
         });
     }

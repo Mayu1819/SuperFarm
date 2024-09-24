@@ -11,11 +11,6 @@ import com.example.superfarm.R;
 import com.example.superfarm.models.ConfigFileModel;
 import com.example.superfarm.models.Sensor;
 import com.example.superfarm.models.UDPClient;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.io.NumberInput;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -151,11 +146,11 @@ public class SetUpActivity extends AppCompatActivity {
         }
         configFileModel.setValues(values);
         String jsonResult = gsonInstance.toJson(configFileModel);
-        //Toast.makeText(this, "json result : " + jsonResult, Toast.LENGTH_LONG).show();
-        System.out.println("json result : " + jsonResult);
+        //System.out.println("json result : " + jsonResult);
         try {
             client = new UDPClient();
             client.sendSetCommand("farm2000_configs", jsonResult);
+            Toast.makeText(this, "Values have been saved", Toast.LENGTH_LONG).show();
             client.close();
         }
         catch (Exception e) {
