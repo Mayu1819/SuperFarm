@@ -14,10 +14,7 @@ import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Comparator;
-import java.util.Date;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
@@ -58,8 +55,10 @@ public class SensorActivity extends AppCompatActivity {
         });
 
         try {
-            int dayOfToday = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+            int dayOfToday = Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1;
             ENUM_Days day = ENUM_Days.values()[dayOfToday];
+
+            spinner.setSelection(day.ordinal());
 
             this.makeGraphForTheDay(day,currentSensor,graph);
 
@@ -97,9 +96,15 @@ public class SensorActivity extends AppCompatActivity {
     }
 
     private void makeGraphForTheDay(ENUM_Days day, Sensor currentSensor, GraphView graph) {
+        Map<String, Float> data = currentSensor.getData().get(day);
+
+        if (data == null) {
+            return;
+        }
+
         //populate the graph with the data for the selected day
         ArrayList<DataPoint> dataPoints = new ArrayList<>();
-        currentSensor.getData().get(day).forEach((hour, value) -> {
+        data.forEach((hour, value) -> {
             dataPoints.add(new DataPoint(Integer.parseInt(hour), value));
         });
 

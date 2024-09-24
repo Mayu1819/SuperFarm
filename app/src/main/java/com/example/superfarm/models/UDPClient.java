@@ -22,7 +22,7 @@ public class UDPClient {
         socket.send(packet);
 
         // Prepare buffer for response
-        byte[] responseBuffer = new byte[1024];
+        byte[] responseBuffer = new byte[32768];
         DatagramPacket responsePacket = new DatagramPacket(responseBuffer, responseBuffer.length);
         socket.receive(responsePacket);
 
